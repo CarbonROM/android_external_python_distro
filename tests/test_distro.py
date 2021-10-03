@@ -1128,6 +1128,20 @@ class TestOverall(DistroTestCase):
         # considered a valid distro release file:
         self._test_non_existing_release_file()
 
+    def test_aix72_release(self) -> None:
+        desired_outcome = {
+            "id": "aix",
+            "name": "AIX",
+            "pretty_name": "AIX 7.2.0.0",
+            "version": "7.2.0.0",
+            "pretty_version": "7.2.0.0",
+            "best_version": "7.2.0.0",
+            "major_version": "7",
+            "minor_version": "2",
+            "build_number": "0",
+        }
+        self._test_outcome(desired_outcome)
+
     def test_centos5_release(self) -> None:
         desired_outcome = {
             "id": "centos",
