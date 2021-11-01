@@ -644,6 +644,7 @@ class LinuxDistribution:
         distro_release_file: str = "",
         include_uname: bool = True,
         root_dir: Optional[str] = None,
+        include_third_bins: bool = True,
     ) -> None:
         """
         The initialization method of this class gathers information from the
@@ -686,6 +687,9 @@ class LinuxDistribution:
         * ``root_dir`` (string): The absolute path to the root directory to use
           to find distro-related information files.
 
+        * ``include_third_bins`` (bool): Controls whether third-party binaries
+          can be included as data sources.
+
         Public instance attributes:
 
         * ``os_release_file`` (string): The path name of the
@@ -702,6 +706,10 @@ class LinuxDistribution:
         * ``include_uname`` (bool): The result of the ``include_uname``
           parameter. This controls whether the uname information will
           be loaded.
+
+        * ``include_third_bins`` (bool): The result of the
+          ``include_third_bins`` parameter. This controls whether information
+          will be loaded from third-party binaries.
 
         Raises:
 
@@ -739,8 +747,9 @@ class LinuxDistribution:
                 self.os_release_file = usr_lib_os_release_file
 
         self.distro_release_file = distro_release_file or ""  # updated later
-        self.include_lsb = include_lsb
-        self.include_uname = include_uname
+        self.include_lsb = include_lsb if not root_dir else False
+        self.include_uname = include_uname if not root_dir else False
+        self.include_third_bins = include_third_bins if not root_dir else False
 
     def __repr__(self) -> str:
         """Return repr of all info"""
@@ -750,6 +759,7 @@ class LinuxDistribution:
             "distro_release_file={self.distro_release_file!r}, "
             "include_lsb={self.include_lsb!r}, "
             "include_uname={self.include_uname!r}, "
+            "include_third_bins={self.include_third_bins!r}, "
             "_os_release_info={self._os_release_info!r}, "
             "_lsb_release_info={self._lsb_release_info!r}, "
             "_distro_release_info={self._distro_release_info!r}, "
@@ -1152,6 +1162,8 @@ class LinuxDistribution:
 
     @cached_property
     def _oslevel_info(self) -> str:
+        if not self.include_third_bins:
+            return ""
         try:
             stdout = subprocess.check_output("oslevel", stderr=subprocess.DEVNULL)
         except (OSError, subprocess.CalledProcessError):
@@ -1323,9 +1335,7 @@ def main() -> None:
     args = parser.parse_args()
 
     if args.root_dir:
-        dist = LinuxDistribution(
-            include_lsb=False, include_uname=False, root_dir=args.root_dir
-        )
+        dist = LinuxDistribution(root_dir=args.root_dir)
     else:
         dist = _distro
 
