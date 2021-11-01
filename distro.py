@@ -711,6 +711,10 @@ class LinuxDistribution:
           ``include_third_bins`` parameter. This controls whether information
           will be loaded from third-party binaries.
 
+        * ``root_dir`` (string): The result of the ``root_dir`` parameter.
+          The absolute path to the root directory to use to find distro-related
+          information files.
+
         Raises:
 
         * :py:exc:`OSError`: Some I/O issue with an os-release file or distro
@@ -756,6 +760,7 @@ class LinuxDistribution:
             "include_lsb={self.include_lsb!r}, "
             "include_uname={self.include_uname!r}, "
             "include_third_bins={self.include_third_bins!r}, "
+            "root_dir={self.root_dir!r}, "
             "_os_release_info={self._os_release_info!r}, "
             "_lsb_release_info={self._lsb_release_info!r}, "
             "_distro_release_info={self._distro_release_info!r}, "
