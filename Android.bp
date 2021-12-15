@@ -1,0 +1,14 @@
+python_library_host {
+    name: "py-distro",
+    srcs: [
+        "*.py",
+    ],
+    version: {
+        py2: {
+            enabled: true,
+        },
+        py3: {
+            enabled: true,
+        },
+    },
+}
